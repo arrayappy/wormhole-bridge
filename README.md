@@ -1,89 +1,27 @@
-# Cross-Chain Native Token Transfer with Wormhole CLI
+# simple wormhole cli
 
-A command-line interface for transferring native tokens across different blockchain networks using Wormhole.
+A simple cli for transferring native tokens across different blockchain networks using wormhole (currently supports ethereum and solana)
 
-## Supported Chains
+**how wormhole core contract works**
+- message submission: create tx on source chain and package tx into msg payload and submit it to guardian network for verification
+- guardians verification: guardins observe and sign the message independently and VAA(verified action approvals) is produced from collections of signatures with message and metadata
+- message reception and execution: on the target chain, executes actions such as minting tokens, updating states or calling specific contract functions
 
-- Ethereum (Sepolia Testnet)
-- Solana (Devnet)
+VAAs: verified action approvals are wormhole's core messaging primitive. they are packets of cross-chain data emitted whenever a cross-chain application contract interacts with the core contract.
 
-## Setup
+guardians: wormhole relies on a set of distributed nodes that monitor the state on several blockchains. in wormhole, these nodes are referred to as guardians.
 
-1. Clone the repository:
+spies: spies are similar to guardians but their primary purpose is to subscribe to the gossiped messages across the guardian network
 
-```bash
-git clone <repository-url>
-cd <repository-name>
-```
+relayers: relayers are processes that deliver VAAs to their destination, they can't compromise security, only availability, and act as delivery mechanisms for VAAs without the capacity to tamper with the outcome.
 
-2. Install dependencies:
 
-```bash
-npm install
-```
+**setup**
 
-3. Set up environment variables:
+1. clone the repository
+2. install dependencies
+3. set up environment variables in .env file
 
-```bash
-cp .env.example .env
-```
+**usage**
 
-Add your private keys to the .env file:
-
-```
-ETH_PRIVATE_KEY=your_ethereum_private_key
-SOL_PRIVATE_KEY=your_solana_private_key
-```
-
-## Usage
-
-Basic native token transfer:
-
-```bash
-npm start Sepolia Solana 0.1
-```
-
-Automatic transfer with native gas:
-
-```bash
-npm start Sepolia Solana 0.1 --automatic --native-gas 0.01
-```
-
-### Command Structure
-
-```bash
-npm start <sourceChain> <destinationChain> <amount> [--automatic] [--native-gas <amount>]
-```
-
-- `sourceChain`: The chain to send from (Sepolia, Solana)
-- `destinationChain`: The chain to send to (Sepolia, Solana)
-- `amount`: Amount of native tokens to transfer
-- `--automatic`: (Optional) Enable automatic transfer
-- `--native-gas <amount>`: (Optional) Amount of native gas to provide for automatic transfers
-
-## Examples
-
-1. Transfer 0.1 native tokens from Ethereum to Solana:
-
-```bash
-npm start Sepolia Solana 0.1
-```
-
-2. Automatic transfer with native gas:
-
-```bash
-npm start Sepolia Solana 0.1 --automatic --native-gas 0.01
-```
-
-3. Transfer native tokens from Solana to Ethereum:
-
-```bash
-npm start Solana Sepolia 0.1
-```
-
-## Notes
-
-- This CLI is configured to use native tokens by default
-- For Ethereum, it uses the Sepolia testnet
-- For Solana, it uses Devnet
-- All amounts should be specified in the native token denomination of the source chain
+basic native token transfer: `npm start Sepolia Solana 0.1`
